@@ -2,7 +2,7 @@
     "name": "material-supply",
     "version": "1.0.0",
     "scripts": {
-        "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
+        "format": "prettier --write '*/**/*.{js,jsx,ts,tsx,json,css,scss,md}'"
     },
     "devDependencies": {
         "husky": "^3.0.0",

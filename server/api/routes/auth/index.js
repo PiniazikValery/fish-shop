@@ -10,6 +10,4 @@ router.post(
   auth_controller.login_user
 );
 
-console.log("test");
-
 module.exports = router;

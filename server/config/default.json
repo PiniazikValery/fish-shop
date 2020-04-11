@@ -1,0 +1,9 @@
+{
+    "db_config": {
+        "connection_string": "bW9uZ29kYjovL3BpbnZhbDoxMjM0NUBjbHVzdGVyMC1zaGFyZC0wMC0wMC1qMWlhNC5tb25nb2RiLm5ldDoyNzAxNyxjbHVzdGVyMC1zaGFyZC0wMC0wMS1qMWlhNC5tb25nb2RiLm5ldDoyNzAxNyxjbHVzdGVyMC1zaGFyZC0wMC0wMi1qMWlhNC5tb25nb2RiLm5ldDoyNzAxNy90ZXN0P3NzbD10cnVlJnJlcGxpY2FTZXQ9Q2x1c3RlcjAtc2hhcmQtMCZhdXRoU291cmNlPWFkbWluJnJldHJ5V3JpdGVzPXRydWUmdz1tYWpvcml0eQ=="
+    },
+    "application_port": 5000,
+    "JWT": {
+        "secret": "super_secret"
+    }
+}

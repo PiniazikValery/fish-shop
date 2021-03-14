@@ -1,5 +1,8 @@
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const User = require("../../../models/account_models/user");
 const Role = require("../../../models/account_models/role");
+const UserToken = require("../../../models/account_models/user_token");
 const {check, validationResult, body} = require("express-validator");
 
 exports.register_user = [
@@ -59,6 +62,28 @@ exports.register_user = [
 
 exports.login_user = (req, res) => {
   res.status(200).json({
-    token: req.user,
+    access_token: req.user.access_token,
+    refresh_token: req.user.refresh_token,
   });
+};
+
+exports.update_token = async (req, res) => {
+  const {user: user_id} =
+    (await UserToken.findOne({token: req.body.token})) || Object.create(null);
+  console.log(user_id);
+  if (user_id) {
+    res.status(200).json({
+      access_token: jwt.sign(
+        {
+          user_id,
+        },
+        config.get("JWT.access_token_secret"),
+        {expiresIn: config.get("JWT.access_token_life")}
+      ),
+    });
+  } else {
+    res.status(500).json({
+      message: "Not valid token",
+    });
+  }
 };

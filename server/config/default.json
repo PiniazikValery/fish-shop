@@ -4,6 +4,9 @@
   },
   "application_port": 5000,
   "JWT": {
-    "secret": "super_secret"
+    "access_token_life": "30s",
+    "refresh_token_life": "24h",
+    "access_token_secret": "access_super_secret",
+    "refresh_token_secret": "refresh_super_secret"
   }
 }

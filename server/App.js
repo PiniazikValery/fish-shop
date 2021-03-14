@@ -8,6 +8,7 @@ const config = require("config");
 const port = process.env.PORT || config.get("application_port");
 const Role = require("./models/account_models/role");
 const auth_routes = require("./api/routes/auth");
+const {setUpBearerStrategy, setUpLocalStrategy} = require("./passport_auth/strategies");
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
 app.use(passport.session());
+setUpBearerStrategy();
+setUpLocalStrategy();
 
 //routing section
 app.use("/user", auth_routes);

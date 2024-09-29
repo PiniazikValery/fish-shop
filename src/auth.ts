@@ -1,10 +1,10 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-// import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 
-// import { SigninFormSchema } from '@/app/lib/definitions'
-// import { getDb } from '@/db'
-// import { User } from "@/db/entity/User";
+import { SigninFormSchema } from '@/app/lib/definitions'
+import { getDb } from '@/db'
+import { User } from "@/db/entity/User";
 import { ZodError } from "zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -19,24 +19,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
-      authorize: async () => {
+      authorize: async (credentials) => {
         try {
-          const user = null
+          let user = null
 
-          // const { email, password } = await SigninFormSchema.parseAsync(credentials)
+          const { email, password } = await SigninFormSchema.parseAsync(credentials)
 
           // logic to verify if the user exists
-          // const db = await getDb();
-          // user = await db.getRepository(User).findOne({ where: { email } })
+          const db = await getDb();
+          user = await db.getRepository(User).findOne({ where: { email } })
 
           if (!user) {
             // No user found, so this is their first attempt to login
             // meaning this is also the place you could do registration
             throw new Error("User not found.")
           }
-          // if (!await bcrypt.compare(password, user?.password)) {
-          //   throw new Error("Wrong password")
-          // }
+          if (!await bcrypt.compare(password, user?.password)) {
+            throw new Error("Wrong password")
+          }
 
           // return user object with their profile data
           return user
@@ -51,14 +51,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     jwt({ token, user }) {
-      console.log('jwt');
       if (user) {
         token.isAdmin = user.isAdmin;
       }
       return token
     },
     session({ session, token }) {
-      console.log('session');
       session.user.isAdmin = token.isAdmin;
       return session
     },
@@ -66,16 +64,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Logged in users are authenticated, otherwise redirect to login page
       const isLoggedIn = !!auth?.user;
       const isAdmin = auth?.user?.isAdmin;
-      console.log("user: ", auth?.user);
       const isAdminRoute = nextUrl.pathname.startsWith('/admin');
+      console.log('nextUrl.pathname: ', nextUrl.pathname);
+      console.log('auth?.user: ', auth?.user);
       if (isAdminRoute) {
         return isLoggedIn && isAdmin;
       }
       return true;
     },
-    redirect: async ({ url }) => {
-      console.log('redirect url: ', url);
-      return url;
-    }
   },
 })

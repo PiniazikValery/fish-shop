@@ -39,4 +39,4 @@ yarn-error.log*
 next-env.d.ts
 
 # sqlite
-/serialized
+/tmp/serialized

@@ -7,7 +7,7 @@ export const getDb = async () => {
     if (!dataSource) {
         dataSource = new DataSource({
             type: 'sqlite',
-            database: 'serialized/database.sqlite',
+            database: 'tmp/serialized/database.sqlite',
             entities: [User],
             synchronize: true,
         });

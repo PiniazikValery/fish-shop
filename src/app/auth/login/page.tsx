@@ -32,7 +32,7 @@ export default function LoginPage() {
                         <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900"> Remember me </label>
                     </div>
                     <div>
-                        <Link href="/auth/register" className="text-sm text-blue-500 hover:underline">Don't have account?</Link>
+                        <Link href="/auth/register" className="text-sm text-blue-500 hover:underline">Don&apos;t have account?</Link>
                     </div>
                 </div>
                 <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">

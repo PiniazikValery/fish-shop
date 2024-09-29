@@ -1,10 +1,10 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 
-import { SigninFormSchema } from '@/app/lib/definitions'
-import { getDb } from '@/db'
-import { User } from "@/db/entity/User";
+// import { SigninFormSchema } from '@/app/lib/definitions'
+// import { getDb } from '@/db'
+// import { User } from "@/db/entity/User";
 import { ZodError } from "zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -19,24 +19,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
-      authorize: async (credentials) => {
+      authorize: async () => {
         try {
-          let user = null
+          const user = null
 
-          const { email, password } = await SigninFormSchema.parseAsync(credentials)
+          // const { email, password } = await SigninFormSchema.parseAsync(credentials)
 
           // logic to verify if the user exists
-          const db = await getDb();
-          user = await db.getRepository(User).findOne({ where: { email } })
+          // const db = await getDb();
+          // user = await db.getRepository(User).findOne({ where: { email } })
 
           if (!user) {
             // No user found, so this is their first attempt to login
             // meaning this is also the place you could do registration
             throw new Error("User not found.")
           }
-          if (!await bcrypt.compare(password, user?.password)) {
-            throw new Error("Wrong password")
-          }
+          // if (!await bcrypt.compare(password, user?.password)) {
+          //   throw new Error("Wrong password")
+          // }
 
           // return user object with their profile data
           return user

@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from 'bcryptjs';
 
-import { SigninFormSchema } from '@/app/lib/definitions'
+import { SigninFormSchema } from '@/app/lib/definitions/auth-definitions'
 import { getDb } from '@/db'
 import { User } from "@/db/entity/User";
 import { ZodError } from "zod";
@@ -65,8 +65,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth?.user;
       const isAdmin = auth?.user?.isAdmin;
       const isAdminRoute = nextUrl.pathname.startsWith('/admin');
-      console.log('nextUrl.pathname: ', nextUrl.pathname);
-      console.log('auth?.user: ', auth?.user);
       if (isAdminRoute) {
         return isLoggedIn && isAdmin;
       }

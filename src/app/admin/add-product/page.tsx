@@ -1,9 +1,22 @@
+'use client';
+
+import { useFormState } from 'react-dom';
+
+import { createProduct } from '@/app/lib/actions/product';
+
 export default function AddProductPage() {
+    const [errorMessage, addProduct] = useFormState(
+        createProduct,
+        undefined,
+      );
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <div className="w-full max-w-6xl bg-white rounded-lg shadow-md p-8">
                 <h1 className="text-2xl font-bold text-center mb-6">Create Product</h1>
-                <form className="space-y-4">
+                <form action={addProduct} className="space-y-4">
+                    {errorMessage && <div>
+                        <p className="text-red-500 text-sm font-medium">{errorMessage}</p>
+                    </div>}
                     <div>
                         <label className="block text-gray-700">Name:</label>
                         <input

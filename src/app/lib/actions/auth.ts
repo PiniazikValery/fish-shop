@@ -4,7 +4,7 @@ import { AuthError } from "next-auth";
 import bcrypt from 'bcryptjs';
 
 import { signIn } from "@/auth";
-import { SignupFormSchema } from "@/app/lib/definitions";
+import { SignupFormSchema } from "@/app/lib/definitions/auth-definitions";
 import { getDb } from "@/db";
 import { User } from "@/db/entity/User";
 import { redirect } from "next/navigation";

@@ -2,6 +2,8 @@ import "reflect-metadata";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Logo from "./components/icons/Logo";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="w-full flex justify-center">
+          <Link href="/products">
+            <Logo width={150} height={150} />
+          </Link>
+        </div>
         {children}
       </body>
     </html>

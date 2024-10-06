@@ -1,3 +1,12 @@
+"use client";
+
+import { ClientOnly } from "@/app/components/ClientOnly";
+import BasketComponent from "@/app/components/Basket";
+
 export default function BasketPage() {
-  return "Here will be basket";
+  return (
+    <ClientOnly>
+      <BasketComponent />
+    </ClientOnly>
+  );
 }

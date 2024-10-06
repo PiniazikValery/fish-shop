@@ -6,6 +6,8 @@ import { createPortal } from "react-dom";
 
 import { Product } from "@/db/entity/Product";
 import { useRouter } from "next/navigation";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { Basket } from "@/types/basket";
 
 export default function ProductDetailsModal({
   children,
@@ -14,6 +16,7 @@ export default function ProductDetailsModal({
   children: React.ReactNode;
   product: Product;
 }) {
+  const [basket, saveInBasket] = useLocalStorage<Basket>("basket", {});
   const router = useRouter();
   const [finalModalIsOpen, setFinalModalIsOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,8 +38,16 @@ export default function ProductDetailsModal({
     event.stopPropagation();
   }, []);
   const placeInBasket = useCallback(() => {
+    const countInBasket = basket?.[product.id]?.count || 0;
+    saveInBasket({
+      ...basket,
+      [product.id]: {
+        product: { ...product },
+        count: Math.min(countInBasket + productsCount, product.count),
+      },
+    });
     setFinalModalIsOpen(true);
-  }, []);
+  }, [basket, product, productsCount]);
   const openModal = useCallback(() => {
     setIsOpen(true);
   }, []);
@@ -93,15 +104,24 @@ export default function ProductDetailsModal({
                     <p className="text-lg font-bold text-gray-900 flex items-center pr-5">
                       BYN {Number(product.price).toFixed(2)}
                     </p>
-                    <p
-                      className={`flex items-center text-sm font-medium ${
-                        product.count > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
-                      {product.count > 0
-                        ? `In Stock: ${product.count}`
-                        : "Out of Stock"}
-                    </p>
+                    <div className="flex">
+                      <p
+                        className={`flex mr-3 items-center text-sm font-medium ${
+                          product.count > 0 ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {product.count > 0
+                          ? `In Stock: ${product.count}`
+                          : "Out of Stock"}
+                      </p>
+                      {basket[product.id]?.count && (
+                        <p
+                          className={`flex items-center text-sm font-medium text-orange-600`}
+                        >
+                          {`In Basket: ${basket[product.id]?.count}`}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div className="min-h-20">
                     <p className="text-gray-700 mb-6 max-h-32 overflow-y-scroll">
@@ -122,7 +142,10 @@ export default function ProductDetailsModal({
                       <button
                         className="bg-gray-300 text-gray-700 rounded-r px-3 py-1"
                         onClick={handleIncrement}
-                        disabled={productsCount >= product.count}
+                        disabled={
+                          productsCount + (basket[product.id]?.count || 0) >=
+                          product.count
+                        }
                       >
                         +
                       </button>
@@ -134,7 +157,10 @@ export default function ProductDetailsModal({
                           ? "bg-blue-500 text-white hover:bg-blue-600"
                           : "bg-gray-400 text-gray-200 cursor-not-allowed"
                       }`}
-                      disabled={product.count === 0}
+                      disabled={
+                        product.count === 0 ||
+                        (basket[product.id]?.count || 0) >= product.count
+                      }
                       onClick={placeInBasket}
                     >
                       Place in Basket

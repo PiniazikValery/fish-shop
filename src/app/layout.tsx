@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Logo from "./components/icons/Logo";
 import Link from "next/link";
+import { MapProvider } from "./providers/map-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,7 +37,7 @@ export default function RootLayout({
             <Logo width={150} height={150} />
           </Link>
         </div>
-        {children}
+        <MapProvider>{children}</MapProvider>
       </body>
     </html>
   );

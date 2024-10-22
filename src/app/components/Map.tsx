@@ -15,6 +15,8 @@ import { useMap } from "@/app/providers/map-provider";
 
 interface MapProps {
   onLocationChange?: (lnglat: LngLat) => void;
+  width?: string;
+  height?: string;
 }
 
 function loadMap(onClick?: DomEventHandler) {
@@ -52,11 +54,10 @@ function loadMap(onClick?: DomEventHandler) {
   return null;
 }
 
-export default function Map({ onLocationChange }: MapProps) {
+export default function Map({ width, height, onLocationChange }: MapProps) {
   const { mapScriptLoaded } = useMap();
   const map = useRef<YMap | null>(null);
   const previusMarker = useRef<YMapEntity<unknown> | null>(null);
-  // const [selectedLocation, setSelectedLocation] = useState<LngLat | null>(null);
   const rerenderMarker = (coordinates: LngLat) => {
     const markerElement = document.createElement("div");
     markerElement.className =
@@ -97,5 +98,5 @@ export default function Map({ onLocationChange }: MapProps) {
       map.current = loadMap(onMapClick);
     }
   }, [mapScriptLoaded, onMapClick]);
-  return <div id="map" style={{ width: 700, height: 700 }}></div>;
+  return <div id="map" style={{ width, height }}></div>;
 }

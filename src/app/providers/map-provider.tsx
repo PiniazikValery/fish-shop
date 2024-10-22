@@ -15,11 +15,7 @@ export const MapProvider: React.FC<{
   return (
     <MapContext.Provider value={{ mapLoaded }}>
       <Script
-        src={
-          process.env.NEXT_PUBLIC_NODE_ENV_LOCAL === "local"
-            ? "/api/yandex-map"
-            : `https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_PUBLIC_YA_MAPS_KEY}&lang=en_US`
-        }
+        src={`https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_PUBLIC_YA_MAPS_KEY}&lang=en_US`}
         strategy="afterInteractive"
         onLoad={async () => {
           await ymaps3.ready;

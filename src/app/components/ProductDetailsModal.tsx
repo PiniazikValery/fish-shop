@@ -47,7 +47,7 @@ export default function ProductDetailsModal({
       },
     });
     setFinalModalIsOpen(true);
-  }, [basket, product, productsCount]);
+  }, [basket, product, productsCount, saveInBasket]);
   const openModal = useCallback(() => {
     setIsOpen(true);
   }, []);

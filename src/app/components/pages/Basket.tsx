@@ -45,8 +45,6 @@ export default function BasketComponent() {
                     <tr key={basketItem.product.id} className="border-b">
                       <td className="p-4">
                         {(() => {
-                          console.log(basketItem);
-                          console.log(basketItem.product.name);
                           return basketItem.product.name;
                         })()}
                       </td>
@@ -87,10 +85,11 @@ export default function BasketComponent() {
               Clear Basket
             </button>
           </div>
-
-          <button className="bg-blue-500 text-white px-6 py-3 rounded w-full text-center font-semibold hover:bg-blue-600 transition">
-            Proceed to Checkout
-          </button>
+          <Link href="/checkout">
+            <button className="bg-blue-500 text-white px-6 py-3 rounded w-full text-center font-semibold hover:bg-blue-600 transition">
+              Proceed to Checkout
+            </button>
+          </Link>
         </>
       )}
     </div>

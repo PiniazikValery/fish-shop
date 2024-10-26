@@ -1,22 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity('product')
+@Entity("product")
 export class Product {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: "varchar", length: 255 })
   name!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: "text" })
   description!: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+  })
   price!: number;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: "varchar", length: 255, nullable: true })
   img!: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: "int" })
   count!: number;
 }

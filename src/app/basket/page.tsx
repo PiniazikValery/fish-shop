@@ -1,7 +1,7 @@
 "use client";
 
 import { ClientOnly } from "@/app/components/ClientOnly";
-import BasketComponent from "@/app/components/Basket";
+import BasketComponent from "@/app/components/pages/Basket";
 
 export default function BasketPage() {
   return (

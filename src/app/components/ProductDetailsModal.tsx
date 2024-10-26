@@ -42,7 +42,7 @@ export default function ProductDetailsModal({
     saveInBasket({
       ...basket,
       [product.id]: {
-        product: { ...product },
+        product: { ...product, price: Number(product.price) },
         count: Math.min(countInBasket + productsCount, product.count),
       },
     });

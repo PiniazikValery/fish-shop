@@ -19,39 +19,49 @@ interface MapProps {
   height?: string;
 }
 
-function loadMap(onClick?: DomEventHandler) {
-  const LOCATION: YMapLocationRequest = {
-    center: [30.334574119049794, 53.88162941583986],
-    zoom: 11,
-  };
-  const {
-    YMap,
-    YMapDefaultSchemeLayer,
-    YMapListener,
-    YMapFeatureDataSource,
-    YMapDefaultFeaturesLayer,
-  } = ymaps3;
-  const mapListener = new YMapListener({
-    layer: "any",
-    onClick: onClick,
-  });
-  const mapElement = document.getElementById("map");
-  if (mapElement) {
-    const map = new YMap(mapElement, {
-      location: LOCATION,
-    });
-    map.addChild(new YMapDefaultSchemeLayer({}));
-    map.addChild(new YMapDefaultFeaturesLayer({}));
-    map.addChild(
-      new YMapFeatureDataSource({
-        id: "featureSource",
-      })
-    );
-    map.addChild(mapListener);
-    return map;
-  }
+function initMapLoader(onClick?: DomEventHandler) {
+  let loadedMap: null | YMap = null;
+  return {
+    loadMap: () => {
+      if (!loadedMap) {
+        const LOCATION: YMapLocationRequest = {
+          center: [30.334574119049794, 53.88162941583986],
+          zoom: 11,
+        };
+        const {
+          YMap,
+          YMapDefaultSchemeLayer,
+          YMapListener,
+          YMapFeatureDataSource,
+          YMapDefaultFeaturesLayer,
+        } = ymaps3;
+        const mapListener = new YMapListener({
+          layer: "any",
+          onClick: onClick,
+        });
+        const mapElement = document.getElementById("map");
+        if (mapElement) {
+          const map = new YMap(mapElement, {
+            location: LOCATION,
+          });
+          map.addChild(new YMapDefaultSchemeLayer({}));
+          map.addChild(new YMapDefaultFeaturesLayer({}));
+          map.addChild(
+            new YMapFeatureDataSource({
+              id: "featureSource",
+            })
+          );
+          map.addChild(mapListener);
+          loadedMap = map;
+          return map;
+        }
 
-  return null;
+        return null;
+      } else {
+        return loadedMap;
+      }
+    },
+  };
 }
 
 export default function Map({ width, height, onLocationChange }: MapProps) {
@@ -93,9 +103,10 @@ export default function Map({ width, height, onLocationChange }: MapProps) {
     },
     [onLocationChange]
   );
+  const mapLoader = useRef(initMapLoader(onMapClick));
   useEffect(() => {
     if (mapScriptLoaded) {
-      map.current = loadMap(onMapClick);
+      map.current = mapLoader.current.loadMap();
     }
   }, [mapScriptLoaded, onMapClick]);
   return <div id="map" style={{ width, height }}></div>;

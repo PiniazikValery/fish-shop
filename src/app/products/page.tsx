@@ -5,7 +5,9 @@ import ProductDetailsModal from "@/app/components/ProductDetailsModal";
 import { ClientOnly } from "@/app/components/ClientOnly";
 
 export default async function ProductPage() {
-  const productsResponse = await fetch(process.env.NEXT_API_URL + "/products");
+  const productsResponse = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/products"
+  );
   if (!productsResponse.ok) {
     throw new Error("Failed to fetch posts");
   }

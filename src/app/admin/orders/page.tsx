@@ -162,7 +162,7 @@ export default function OrdersPage() {
                                   {order.basket[itemKey]?.product.name}
                                 </td>
                                 <td className="px-4 py-2 text-gray-800">
-                                  {order.basket[itemKey]?.product.count}
+                                  {order.basket[itemKey]?.count}
                                 </td>
                                 <td className="px-4 py-2 text-gray-800">
                                   {order.basket[itemKey]?.product.price.toFixed(
@@ -173,8 +173,7 @@ export default function OrdersPage() {
                                 <td className="px-4 py-2 text-gray-800">
                                   {(
                                     (order.basket[itemKey]?.product.price ||
-                                      0) *
-                                    (order.basket[itemKey]?.product.count || 0)
+                                      0) * (order.basket[itemKey]?.count || 0)
                                   ).toFixed(2)}{" "}
                                   BYN
                                 </td>

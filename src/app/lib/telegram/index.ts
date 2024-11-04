@@ -9,9 +9,9 @@ export const initBot = async () => {
   const TELEGRAM_TOKEN = process.env.NEXT_TELEGRAM_TOKEN as string;
   bot = new Bot(TELEGRAM_TOKEN);
 
-  // if (process.env.NEXT_PUBLIC_API_URL) {
-  //   bot.api.setWebhook(`${process.env.NEXT_PUBLIC_API_URL}/telegramWebhook`);
-  // }
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    bot.api.setWebhook(`${process.env.NEXT_PUBLIC_API_URL}/telegramWebhook`);
+  }
 
   bot.command("start", async (ctx) => {
     const chatId = ctx.chat.id;

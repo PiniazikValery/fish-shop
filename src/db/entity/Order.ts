@@ -25,9 +25,6 @@ export class Order {
   @Column({ type: "text", nullable: true })
   courierDetails?: string;
 
-  @Column({ type: "varchar", length: 50, default: "pending" })
-  status!: string;
-
   // Store the basket as JSON in the database
   @Column({ type: "json" })
   basket!: Basket;

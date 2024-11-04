@@ -45,6 +45,7 @@ export default function CheckoutComponent() {
           setMessage(null);
           setBasket(Object.create(null));
           router.push("/");
+          router.refresh();
         } else {
           setMessage(result.message);
         }

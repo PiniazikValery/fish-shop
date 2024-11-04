@@ -7,6 +7,12 @@ import { InMemoryQueue } from "@/app/api/utils";
 import { getDb } from "@/db";
 import { Order } from "@/db/entity/Order";
 import { Product } from "@/db/entity/Product";
+import { getBot } from "@/app/lib/telegram";
+import { ChatId } from "@/db/entity/ChatId";
+
+const getYandexMapsLink = (latitude: number, longitude: number) => {
+  return `https://yandex.com/maps/?ll=${longitude},${latitude}&z=15&pt=${longitude},${latitude},pm2rdl`;
+};
 
 type CheckoutResponse = {
   success: boolean;
@@ -26,6 +32,7 @@ export async function POST(
       const db = await getDb();
       const orderRepository = db.getRepository(Order);
       const productRepository = db.getRepository(Product);
+      const chatIdRepository = db.getRepository(ChatId);
 
       for (const [productId, { count }] of Object.entries(data.basket)) {
         const product = await productRepository.findOne({
@@ -59,10 +66,44 @@ export async function POST(
         address: data.address,
         courierDetails: data.courierDetails,
         basket: data.basket,
-        status: "pending",
       });
 
       await orderRepository.save(order);
+      const bot = await getBot();
+      const orderDetailsMessage = `🛒 *Order Created Successfully!*
+
+Hello, a new order has been created
+
+*Order Details:*
+\- **Name:** ${order.name}
+\- **Phone:** ${order.phone}
+\- **Address:** [View on Yandex Maps](${getYandexMapsLink(
+        order.address[1],
+        order.address[0]
+      )})
+\- **Courier Instructions:** ${order.courierDetails || "None"}
+
+*Products:*
+${Object.entries(data.basket)
+  .map(
+    ([, { count, product }]) =>
+      `\- ${count} x ${product.name || "Unknown Product"}`
+  )
+  .join("\n")}
+
+Thank you for choosing our service! 🚀`;
+      for (const chat of await chatIdRepository.find()) {
+        try {
+          await bot.api.sendMessage(chat.chatId, orderDetailsMessage, {
+            parse_mode: "Markdown",
+          });
+        } catch (error) {
+          console.error(
+            `Failed to send message to chatId ${chat.chatId}:`,
+            error
+          );
+        }
+      }
       revalidatePath("/products", "page");
     });
     return NextResponse.json({

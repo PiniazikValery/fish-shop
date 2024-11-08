@@ -10,10 +10,11 @@ export const initBot = async () => {
   bot = new Bot(TELEGRAM_TOKEN);
 
   if (process.env.NEXT_PUBLIC_API_URL) {
-    // await bot.api.setWebhook(`${process.env.NEXT_PUBLIC_API_URL}/telegramWebhook`);
+    await bot.api.setWebhook(`${process.env.NEXT_PUBLIC_API_URL}/telegramWebhook`);
   }
 
   bot.command("start", async (ctx) => {
+    console.log("bot start");
     const chatId = ctx.chat.id;
 
     const db = await getDb();

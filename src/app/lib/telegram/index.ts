@@ -33,6 +33,7 @@ export const initBot = async () => {
   });
 
   await bot.init();
+  console.log("bot inited");
   bot.start();
   botInitialized = true;
 };

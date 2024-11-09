@@ -21,7 +21,7 @@ const TELEGRAM_TOKEN = process.env.NEXT_TELEGRAM_TOKEN as string;
 
 if (!TELEGRAM_TOKEN) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
 
-const bot = new Bot(TELEGRAM_TOKEN)
+export const bot = new Bot(TELEGRAM_TOKEN)
  bot.command("start", async (ctx) => {
     console.log("bot start");
     const chatId = ctx.chat.id;

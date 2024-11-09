@@ -2,18 +2,10 @@ import { getDb } from "@/db";
 import { ChatId } from "@/db/entity/ChatId";
 import { Api, Bot, Context, RawApi } from "grammy";
 
-let bot: Bot<Context, Api<RawApi>> | undefined = undefined;
-let botInitialized = false;
+ const TELEGRAM_TOKEN = process.env.NEXT_TELEGRAM_TOKEN as string;
+  export const bot = new Bot(TELEGRAM_TOKEN);
 
-export const initBot = async () => {
-  const TELEGRAM_TOKEN = process.env.NEXT_TELEGRAM_TOKEN as string;
-  bot = new Bot(TELEGRAM_TOKEN);
-
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    await bot.api.setWebhook(`${process.env.NEXT_PUBLIC_API_URL}/telegramWebhook`);
-  }
-
-  bot.command("start", async (ctx) => {
+ bot.command("start", async (ctx) => {
     console.log("bot start");
     const chatId = ctx.chat.id;
 
@@ -32,16 +24,3 @@ export const initBot = async () => {
       console.error("Error saving chatId:", error);
     }
   });
-
-  await bot.init();
-  console.log("bot inited ", bot);
-  // bot.start();
-  botInitialized = true;
-};
-
-export const getBot = async () => {
-  if (!botInitialized) {
-    await initBot();
-  }
-  return bot!;
-};

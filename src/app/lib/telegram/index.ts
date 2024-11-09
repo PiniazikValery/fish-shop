@@ -1,6 +1,6 @@
 import { getDb } from "@/db";
 import { ChatId } from "@/db/entity/ChatId";
-import { Api, Bot, Context, RawApi } from "grammy";
+import { Bot } from "grammy";
 
  const TELEGRAM_TOKEN = process.env.NEXT_TELEGRAM_TOKEN as string;
   export const bot = new Bot(TELEGRAM_TOKEN);

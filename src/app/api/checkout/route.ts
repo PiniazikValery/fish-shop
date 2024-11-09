@@ -7,7 +7,7 @@ import { InMemoryQueue } from "@/app/api/utils";
 import { getDb } from "@/db";
 import { Order } from "@/db/entity/Order";
 import { Product } from "@/db/entity/Product";
-import { getBot } from "@/app/lib/telegram";
+import { bot } from "@/app/lib/telegram";
 import { ChatId } from "@/db/entity/ChatId";
 
 const getYandexMapsLink = (latitude: number, longitude: number) => {
@@ -69,7 +69,6 @@ export async function POST(
       });
 
       await orderRepository.save(order);
-      const bot = await getBot();
       const orderDetailsMessage = `🛒 *Order Created Successfully!*
 
 Hello, a new order has been created

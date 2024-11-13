@@ -17,7 +17,7 @@ export const getDb = async () => {
       password: process.env.NEXT_POSTGRES_PASSWORD,
       database: process.env.NEXT_POSTGRES_DATABASE,
       entities: [User, Product, Order, ChatId],
-      synchronize: false,
+      synchronize: true,
     });
     await dataSource.initialize();
   }

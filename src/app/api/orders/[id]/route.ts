@@ -47,6 +47,10 @@ export async function PATCH(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await auth();
+  if (!session) {
+    return new Response("Unauthorized", { status: 401 });
+  }
   const id = (await params).id;
   if (!id || Array.isArray(id)) {
     return new Response("Invalid order ID", { status: 400 });

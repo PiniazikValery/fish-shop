@@ -14,6 +14,39 @@ async function deleteOrder(orderId: string) {
   return deleteResult.affected !== 0;
 }
 
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id: phoneNumber } = await params;
+
+  console.log("phoneNumber: ", phoneNumber);
+
+  try {
+    const db = await getDb();
+    const ordersRepository = db.getRepository(Order);
+
+    const orders = await ordersRepository.find({
+      where: { phone: phoneNumber },
+    });
+
+    if (!orders.length) {
+      return new Response(`No orders found for phone number ${phoneNumber}`, {
+        status: 404,
+      });
+    }
+
+    return Response.json({
+      orders,
+    });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return new Response("An error occurred while fetching orders.", {
+      status: 500,
+    });
+  }
+}
+
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }

@@ -27,6 +27,5 @@ export const ProductSchema = z.object({
 
   quantity: z
     .number()
-    .int({ message: "Count must be an integer." })
     .nonnegative({ message: "Count must be zero or a positive integer." }),
 });

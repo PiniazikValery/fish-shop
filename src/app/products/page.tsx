@@ -47,11 +47,11 @@ export default async function ProductPage() {
                     </p>
                     <p
                       className={`text-sm font-medium mb-2 ${
-                        product.count > 0 ? "text-green-600" : "text-red-600"
+                        product.quantity > 0 ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {product.count > 0
-                        ? `In Stock: ${product.count}`
+                      {product.quantity > 0
+                        ? `In Stock: ${product.quantity}`
                         : "Out of Stock"}
                     </p>
                   </div>

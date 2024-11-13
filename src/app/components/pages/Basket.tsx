@@ -8,12 +8,13 @@ import { ChangeEvent, useCallback, useMemo } from "react";
 
 export default function BasketComponent() {
   const [basket, setBasket] = useLocalStorage<Basket>("basket", {});
+  console.log("basket: ", basket);
   const basketArr = useMemo(() => Object.values(basket), [basket]);
   const totalAmount = useMemo(
     () =>
       basketArr.reduce(
         (prevValue, item) =>
-          (item ? item.count * item.product.price : 0) + prevValue,
+          (item ? item.quantity * item.product.price : 0) + prevValue,
         0
       ),
     [basketArr]
@@ -25,9 +26,9 @@ export default function BasketComponent() {
         ...basket,
         [productId]: {
           ...basket[productId],
-          count: Math.min(
+          quantity: Math.min(
             +e.target.value || 1,
-            basket[productId]!.product.count
+            basket[productId]!.product.quantity
           ),
         },
       });
@@ -84,16 +85,16 @@ export default function BasketComponent() {
                           data-product-id={basketItem.product.id}
                           onChange={onCountChange}
                           type="number"
-                          value={basketItem.count || ""}
+                          value={basketItem.quantity || ""}
                           min="1"
                           className="w-16 p-2 border rounded"
                         />
                       </td>
                       <td className="p-4 w-1/5">
                         BYN{" "}
-                        {(basketItem.product.price * basketItem.count).toFixed(
-                          2
-                        )}
+                        {(
+                          basketItem.product.price * basketItem.quantity
+                        ).toFixed(2)}
                       </td>
                       <td className="p-4 w-1/5">
                         <div className="flex justify-end">

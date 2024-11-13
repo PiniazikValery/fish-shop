@@ -73,7 +73,9 @@ export async function PATCH(
             where: { id: +itemKey },
           });
           if (product) {
-            product.count += order.basket[itemKey]?.count || 0;
+            product.quantity =
+              Number(product.quantity) + (order.basket[itemKey]?.quantity || 0);
+            console.log("product: ", product);
             await productRepository.save(product);
             revalidatePath("/products", "page");
           }

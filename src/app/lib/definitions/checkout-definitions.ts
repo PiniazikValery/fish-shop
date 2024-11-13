@@ -20,7 +20,7 @@ export const CheckoutSchema = z.object({
     z.string(),
     z.object({
       product: ProductSchema, // Reference the existing Product schema
-      count: z.number().positive("Count must be a positive number"),
+      quantity: z.number().positive("Count must be a positive number"),
     })
   ),
 });

@@ -4,7 +4,7 @@ export interface Basket {
   [key: string]:
     | {
         product: Product;
-        count: number;
+        quantity: number;
       }
     | undefined;
 }

@@ -38,12 +38,16 @@ export default function ProductDetailsModal({
     event.stopPropagation();
   }, []);
   const placeInBasket = useCallback(() => {
-    const countInBasket = basket?.[product.id]?.count || 0;
+    const countInBasket = basket?.[product.id]?.quantity || 0;
     saveInBasket({
       ...basket,
       [product.id]: {
-        product: { ...product, price: Number(product.price) },
-        count: Math.min(countInBasket + productsCount, product.count),
+        product: {
+          ...product,
+          price: Number(product.price),
+          quantity: Number(product.quantity),
+        },
+        quantity: Math.min(countInBasket + productsCount, product.quantity),
       },
     });
     setFinalModalIsOpen(true);
@@ -107,18 +111,20 @@ export default function ProductDetailsModal({
                     <div className="flex">
                       <p
                         className={`flex mr-3 items-center text-sm font-medium ${
-                          product.count > 0 ? "text-green-600" : "text-red-600"
+                          product.quantity > 0
+                            ? "text-green-600"
+                            : "text-red-600"
                         }`}
                       >
-                        {product.count > 0
-                          ? `In Stock: ${product.count}`
+                        {product.quantity > 0
+                          ? `In Stock: ${product.quantity}`
                           : "Out of Stock"}
                       </p>
-                      {basket[product.id]?.count && (
+                      {basket[product.id]?.quantity && (
                         <p
                           className={`flex items-center text-sm font-medium text-orange-600`}
                         >
-                          {`In Basket: ${basket[product.id]?.count}`}
+                          {`In Basket: ${basket[product.id]?.quantity}`}
                         </p>
                       )}
                     </div>
@@ -143,8 +149,8 @@ export default function ProductDetailsModal({
                         className="bg-gray-300 text-gray-700 rounded-r px-3 py-1"
                         onClick={handleIncrement}
                         disabled={
-                          productsCount + (basket[product.id]?.count || 0) >=
-                          product.count
+                          productsCount + (basket[product.id]?.quantity || 0) >=
+                          product.quantity
                         }
                       >
                         +
@@ -153,13 +159,13 @@ export default function ProductDetailsModal({
                     {/* Place in Basket Button */}
                     <button
                       className={`w-1/2 ml-4 font-semibold py-2 rounded transition duration-200 ${
-                        product.count > 0
+                        product.quantity > 0
                           ? "bg-blue-500 text-white hover:bg-blue-600"
                           : "bg-gray-400 text-gray-200 cursor-not-allowed"
                       }`}
                       disabled={
-                        product.count === 0 ||
-                        (basket[product.id]?.count || 0) >= product.count
+                        product.quantity === 0 ||
+                        (basket[product.id]?.quantity || 0) >= product.quantity
                       }
                       onClick={placeInBasket}
                     >

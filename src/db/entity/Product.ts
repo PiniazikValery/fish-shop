@@ -21,6 +21,10 @@ export class Product {
   @Column({ type: "varchar", length: 255, nullable: true })
   img!: string;
 
-  @Column({ type: "int" })
-  count!: number;
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+  })
+  quantity!: number;
 }

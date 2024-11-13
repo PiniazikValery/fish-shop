@@ -19,6 +19,7 @@ export default function OrdersPage() {
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/orders");
       const data = await response.json();
+      console.log("orders: ", data.orders);
       setOrders(data.orders);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
@@ -187,7 +188,7 @@ export default function OrdersPage() {
                                   {order.basket[itemKey]?.product.name}
                                 </td>
                                 <td className="px-4 py-2 text-gray-800">
-                                  {order.basket[itemKey]?.count}
+                                  {order.basket[itemKey]?.quantity}
                                 </td>
                                 <td className="px-4 py-2 text-gray-800">
                                   {order.basket[itemKey]?.product.price.toFixed(
@@ -198,7 +199,8 @@ export default function OrdersPage() {
                                 <td className="px-4 py-2 text-gray-800">
                                   {(
                                     (order.basket[itemKey]?.product.price ||
-                                      0) * (order.basket[itemKey]?.count || 0)
+                                      0) *
+                                    (order.basket[itemKey]?.quantity || 0)
                                   ).toFixed(2)}{" "}
                                   BYN
                                 </td>

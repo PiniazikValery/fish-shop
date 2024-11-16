@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { ProductSchema } from "@/app/lib/definitions/product-definitions";
 
-export const CheckoutSchema = z.object({
+export const OrderSchema = z.object({
+  id: z.number().optional(),
   name: z.string().min(1, "Name is required"),
   phone: z
     .string()

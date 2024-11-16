@@ -8,7 +8,6 @@ import { ChangeEvent, useCallback, useMemo } from "react";
 
 export default function BasketComponent() {
   const [basket, setBasket] = useLocalStorage<Basket>("basket", {});
-  console.log("basket: ", basket);
   const basketArr = useMemo(() => Object.values(basket), [basket]);
   const totalAmount = useMemo(
     () =>

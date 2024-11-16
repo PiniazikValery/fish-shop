@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { CheckoutSchema } from "@/app/lib/definitions/checkout-definitions";
+import { OrderSchema } from "@/app/lib/definitions/order-definitions";
 import { InMemoryQueue } from "@/app/api/utils";
 import { getDb } from "@/db";
 import { Order } from "@/db/entity/Order";
@@ -19,7 +19,7 @@ type CheckoutResponse = {
   message: string;
 };
 
-type CheckoutRequest = z.infer<typeof CheckoutSchema>;
+type CheckoutRequest = z.infer<typeof OrderSchema>;
 
 const queue = new InMemoryQueue();
 
@@ -27,7 +27,7 @@ export async function POST(
   request: Request
 ): Promise<NextResponse<CheckoutResponse>> {
   try {
-    const data: CheckoutRequest = CheckoutSchema.parse(await request.json());
+    const data: CheckoutRequest = OrderSchema.parse(await request.json());
     await queue.enqueue(async () => {
       const db = await getDb();
       const orderRepository = db.getRepository(Order);
@@ -110,7 +110,6 @@ export async function POST(
       message: "Checkout processed successfully",
     });
   } catch (error) {
-    console.log("error: ", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {

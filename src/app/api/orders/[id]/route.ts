@@ -20,8 +20,6 @@ export async function GET(
 ) {
   const { id: phoneNumber } = await params;
 
-  console.log("phoneNumber: ", phoneNumber);
-
   try {
     const db = await getDb();
     const ordersRepository = db.getRepository(Order);
@@ -48,7 +46,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
@@ -60,6 +58,39 @@ export async function DELETE(
     return new Response("Invalid order ID", { status: 400 });
   }
   try {
+    const { isRemove = false }: { isRemove: boolean } = await request.json();
+    if (isRemove) {
+      const db = await getDb();
+      const orderRepository = db.getRepository(Order);
+      const productRepository = db.getRepository(Product);
+
+      const order = await orderRepository.findOne({
+        where: { id: parseInt(id) },
+      });
+      if (!order) {
+        return new Response("Order not found", {
+          status: 404,
+        });
+      }
+
+      await Promise.all(
+        Object.keys(order.basket).map(async (itemKey) => {
+          const basketProduct = order.basket[itemKey]?.product;
+          if (basketProduct) {
+            const product = await productRepository.findOne({
+              where: { id: +itemKey },
+            });
+            if (product) {
+              product.quantity =
+                Number(product.quantity) +
+                (order.basket[itemKey]?.quantity || 0);
+              await productRepository.save(product);
+              revalidatePath("/products", "page");
+            }
+          }
+        })
+      );
+    }
     const orderDeleted = await deleteOrder(id);
     if (!orderDeleted) {
       return new Response("Order not found", { status: 404 });
@@ -76,63 +107,38 @@ export async function DELETE(
   }
 }
 
-export async function PATCH(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await auth();
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  const id = (await params).id;
-  if (!id || Array.isArray(id)) {
-    return new Response("Invalid order ID", { status: 400 });
-  }
+export async function PATCH(request: Request) {
   try {
     const db = await getDb();
     const orderRepository = db.getRepository(Order);
     const productRepository = db.getRepository(Product);
-
-    const order = await orderRepository.findOne({
-      where: { id: parseInt(id) },
+    const { order: newOrder }: { order: Order } = await request.json();
+    const oldOrder = await orderRepository.findOne({
+      where: { id: newOrder.id },
     });
-    if (!order) {
-      return new Response("Order not found", {
-        status: 404,
-      });
-    }
-
     await Promise.all(
-      Object.keys(order.basket).map(async (itemKey) => {
-        const basketProduct = order.basket[itemKey]?.product;
-        if (basketProduct) {
-          const product = await productRepository.findOne({
-            where: { id: +itemKey },
-          });
-          if (product) {
-            product.quantity =
-              Number(product.quantity) + (order.basket[itemKey]?.quantity || 0);
-            console.log("product: ", product);
-            await productRepository.save(product);
-            revalidatePath("/products", "page");
-          }
+      Object.keys(newOrder.basket).map(async (itemKey) => {
+        const difference =
+          (oldOrder?.basket[itemKey]?.quantity || 0) -
+          (newOrder?.basket[itemKey]?.quantity || 0);
+        const product = await productRepository.findOne({
+          where: { id: +itemKey },
+        });
+        if (product) {
+          product.quantity = Math.max(Number(product.quantity) + difference, 0);
+          await productRepository.save(product);
+          revalidatePath("/products", "page");
         }
       })
     );
-
-    const orderDeleted = await deleteOrder(id);
-
-    if (!orderDeleted) {
-      return new Response("Order not found", { status: 404 });
-    }
-
+    await orderRepository.save(newOrder);
     return Response.json({
       success: true,
-      message: "Order canceled successfully",
+      message: "Order updated successfully",
     });
-  } catch (error) {
-    console.error(error);
-    return new Response("An error occurred while canceling the order", {
+  } catch (err) {
+    console.error(err);
+    return new Response("An error occurred while updating the order", {
       status: 500,
     });
   }

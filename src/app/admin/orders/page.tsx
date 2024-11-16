@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { TrashIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 import { Order } from "@/db/entity/Order";
+import OrderRow from "@/app/components/OrderRow";
 
 const getYandexMapsLink = (latitude: number, longitude: number) => {
   return `https://yandex.com/maps/?ll=${longitude},${latitude}&z=15&pt=${longitude},${latitude},pm2rdl`;
@@ -19,7 +20,6 @@ export default function OrdersPage() {
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/orders");
       const data = await response.json();
-      console.log("orders: ", data.orders);
       setOrders(data.orders);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
@@ -34,10 +34,11 @@ export default function OrdersPage() {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
 
-  const handleRemoveOrder = async (orderId: number, method: string) => {
+  const handleRemoveOrder = async (orderId: number, isRemove: boolean) => {
     try {
       const response = await fetch(`/api/orders/${orderId}`, {
-        method,
+        method: "DELETE",
+        body: JSON.stringify({ isRemove }),
       });
       const data = await response.json();
 
@@ -137,7 +138,7 @@ export default function OrdersPage() {
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
-                        handleRemoveOrder(order.id, "DELETE");
+                        handleRemoveOrder(order.id, false);
                       }}
                       className="text-red-500 flex items-center space-x-1"
                     >
@@ -146,7 +147,7 @@ export default function OrdersPage() {
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
-                        handleRemoveOrder(order.id, "PATCH");
+                        handleRemoveOrder(order.id, true);
                       }}
                       className="text-yellow-500 flex items-center space-x-1"
                     >
@@ -154,64 +155,7 @@ export default function OrdersPage() {
                     </button>
                   </td>
                 </tr>
-                {expandedOrderId === order.id && (
-                  <tr>
-                    <td colSpan={8} className="px-6 py-4 bg-gray-50">
-                      <div className="p-4 border border-gray-200 rounded-md">
-                        <h3 className="text-lg font-semibold mb-2">
-                          Basket Items
-                        </h3>
-                        <table className="min-w-full bg-white shadow rounded-lg">
-                          <thead>
-                            <tr>
-                              <th className="px-4 py-2 text-left text-gray-600 font-semibold">
-                                Item Name
-                              </th>
-                              <th className="px-4 py-2 text-left text-gray-600 font-semibold">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-left text-gray-600 font-semibold">
-                                Price
-                              </th>
-                              <th className="px-4 py-2 text-left text-gray-600 font-semibold">
-                                Total
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Object.keys(order.basket).map((itemKey) => (
-                              <tr
-                                key={order.basket[itemKey]?.product.id}
-                                className="border-b"
-                              >
-                                <td className="px-4 py-2 text-gray-800">
-                                  {order.basket[itemKey]?.product.name}
-                                </td>
-                                <td className="px-4 py-2 text-gray-800">
-                                  {order.basket[itemKey]?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-gray-800">
-                                  {order.basket[itemKey]?.product.price.toFixed(
-                                    2
-                                  )}{" "}
-                                  BYN
-                                </td>
-                                <td className="px-4 py-2 text-gray-800">
-                                  {(
-                                    (order.basket[itemKey]?.product.price ||
-                                      0) *
-                                    (order.basket[itemKey]?.quantity || 0)
-                                  ).toFixed(2)}{" "}
-                                  BYN
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                )}
+                {expandedOrderId === order.id && <OrderRow order={order} />}
               </Fragment>
             ))}
           </tbody>

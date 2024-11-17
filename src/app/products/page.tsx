@@ -3,8 +3,11 @@ import Image from "next/image";
 import { Product } from "@/db/entity/Product";
 import ProductDetailsModal from "@/app/components/ProductDetailsModal";
 import { ClientOnly } from "@/app/components/ClientOnly";
+import EditProductButton from "@/app/components/EditProductButton";
+import { auth } from "@/auth";
 
 export default async function ProductPage() {
+  const session = await auth();
   const productsResponse = await fetch(
     process.env.NEXT_PUBLIC_API_URL + "/products"
   );
@@ -24,6 +27,9 @@ export default async function ProductPage() {
               <ClientOnly>
                 <ProductDetailsModal product={product}>
                   <div className="relative w-full h-64">
+                    {session?.user?.isAdmin && (
+                      <EditProductButton productId={product.id} />
+                    )}
                     {product.img && (
                       <Image
                         fill={true}

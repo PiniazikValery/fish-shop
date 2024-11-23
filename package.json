@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.1.5",
     "@uidotdev/usehooks": "^2.4.1",
     "bcryptjs": "^2.4.3",
+    "decimal.js": "^10.4.3",
     "grammy": "^1.31.0",
     "lodash": "^4.17.21",
     "next": "14.2.13",

@@ -15,7 +15,6 @@ export default async function ProductPage(props: {
   const session = await auth();
   const searchParams = await props.searchParams;
   const search = searchParams?.search || "";
-  // console.log("search: ", search);
   const productsResponse = await fetch(
     process.env.NEXT_PUBLIC_API_URL + `/products?search=${search}`
   );

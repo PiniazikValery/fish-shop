@@ -8,12 +8,12 @@ import { InMemoryQueue } from "@/app/api/utils";
 import { getDb } from "@/db";
 import { Order } from "@/db/entity/Order";
 import { Product } from "@/db/entity/Product";
-// import { bot } from "@/app/lib/telegram";
+import { bot } from "@/app/lib/telegram";
 import { ChatId } from "@/db/entity/ChatId";
 
-// const getYandexMapsLink = (latitude: number, longitude: number) => {
-//   return `https://yandex.com/maps/?ll=${longitude},${latitude}&z=15&pt=${longitude},${latitude},pm2rdl`;
-// };
+const getYandexMapsLink = (latitude: number, longitude: number) => {
+  return `https://yandex.com/maps/?ll=${longitude},${latitude}&z=15&pt=${longitude},${latitude},pm2rdl`;
+};
 
 type CheckoutResponse = {
   success: boolean;
@@ -78,33 +78,33 @@ export async function POST(
       });
 
       await orderRepository.save(order);
-      //       const orderDetailsMessage = `🛒 *Order Created Successfully!*
+      const orderDetailsMessage = `🛒 *Order Created Successfully!*
 
-      // Hello, a new order has been created
+      Hello, a new order has been created
 
-      // *Order Details:*
-      // \- **Name:** ${order.name}
-      // \- **Phone:** ${order.phone}
-      // \- **Address:** [View on Yandex Maps](${getYandexMapsLink(
-      //         order.address[1],
-      //         order.address[0]
-      //       )})
-      // \- **Courier Instructions:** ${order.courierDetails || "None"}
+      *Order Details:*
+      \- **Name:** ${order.name}
+      \- **Phone:** ${order.phone}
+      \- **Address:** [View on Yandex Maps](${getYandexMapsLink(
+        order.address[1],
+        order.address[0]
+      )})
+      \- **Courier Instructions:** ${order.courierDetails || "None"}
 
-      // *Products:*
-      // ${Object.entries(data.basket)
-      //   .map(
-      //     ([, { count, product }]) =>
-      //       `\- ${count} x ${product.name || "Unknown Product"}`
-      //   )
-      //   .join("\n")}
+      *Products:*
+      ${Object.entries(data.basket)
+        .map(
+          ([, { quantity, product }]) =>
+            `\- ${quantity} x ${product.name || "Unknown Product"}`
+        )
+        .join("\n")}
 
-      // Thank you for choosing our service! 🚀`;
+      Thank you for choosing our service! 🚀`;
       for (const chat of await chatIdRepository.find()) {
         try {
-          // await bot.api.sendMessage(chat.chatId, orderDetailsMessage, {
-          //   parse_mode: "Markdown",
-          // });
+          await bot.api.sendMessage(chat.chatId, orderDetailsMessage, {
+            parse_mode: "Markdown",
+          });
         } catch (error) {
           console.error(
             `Failed to send message to chatId ${chat.chatId}:`,

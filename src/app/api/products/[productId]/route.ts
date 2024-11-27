@@ -2,6 +2,7 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 import Decimal from "decimal.js";
 import { revalidatePath } from "next/cache";
+import { ObjectId } from "mongodb";
 
 import { ProductSchema } from "@/app/lib/definitions/product-definitions";
 import { getDb } from "@/db";
@@ -20,10 +21,9 @@ export async function GET(
 ) {
   const { productId } = await params;
   const db = await getDb();
-  const productRepository = db.getRepository(Product);
-
-  const product = await productRepository.findOne({
-    where: { id: +productId },
+  const productRepository = db.getMongoRepository(Product);
+  const product = await productRepository.findOneBy({
+    _id: new ObjectId(productId),
   });
 
   if (!product) {
@@ -39,13 +39,12 @@ export async function PATCH(request: Request) {
       await request.json()
     );
     const { product: updatedProductData, quantityDiff } = data;
-    console.log("quantityDiff: ", quantityDiff);
 
     const db = await getDb();
-    const productRepository = db.getRepository(Product);
+    const productRepository = db.getMongoRepository(Product);
 
-    const existingProduct = await productRepository.findOne({
-      where: { id: updatedProductData.id }, // Ensure the ID is passed in the `product` object
+    const existingProduct = await productRepository.findOneBy({
+      _id: new ObjectId(updatedProductData._id),
     });
 
     if (!existingProduct) {
@@ -61,13 +60,18 @@ export async function PATCH(request: Request) {
         .toNumber(),
       0
     );
-    console.log("newQuantity: ", newQuantity);
 
     Object.assign(existingProduct, updatedProductData);
 
     existingProduct.quantity = newQuantity;
-    console.log("existingProduct: ", existingProduct);
-    await productRepository.save(existingProduct);
+    const { _id, ...fieldsToUpdate } = existingProduct;
+
+    await productRepository.updateOne(
+      {
+        _id: new ObjectId(_id),
+      },
+      { $set: fieldsToUpdate }
+    );
 
     revalidatePath("/products", "page");
     return NextResponse.json({
@@ -85,6 +89,7 @@ export async function PATCH(request: Request) {
         { status: 400 }
       );
     }
+    console.log(err);
     return NextResponse.json(
       {
         success: false,

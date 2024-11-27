@@ -9,15 +9,13 @@ let dataSource: DataSource | null = null;
 export const getDb = async () => {
   if (!dataSource) {
     dataSource = new DataSource({
-      ssl: true,
-      type: "postgres",
-      host: process.env.NEXT_POSTGRES_HOST,
-      port: +(process.env.NEXT_POSTGRES_PORT || 5432),
-      username: process.env.NEXT_POSTGRES_USERNAME,
-      password: process.env.NEXT_POSTGRES_PASSWORD,
-      database: process.env.NEXT_POSTGRES_DATABASE,
-      entities: [User, Product, Order, ChatId],
+      type: "mongodb",
+      url: process.env.NEXT_PUBLIC_MONGO_CONNECTION_STR,
+      useUnifiedTopology: true,
+      database: process.env.NEXT_PUBLIC_MONGO_DB_NAME,
       synchronize: true,
+      logging: true,
+      entities: [User, Product, Order, ChatId],
     });
     await dataSource.initialize();
   }

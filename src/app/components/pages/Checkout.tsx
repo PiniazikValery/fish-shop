@@ -44,7 +44,7 @@ export default function CheckoutComponent() {
         if (response.ok) {
           setMessage(null);
           setBasket(Object.create(null));
-          router.push("/");
+          router.push("/orders/" + Number(phone));
           router.refresh();
         } else {
           setMessage(result.message);

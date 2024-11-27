@@ -15,7 +15,7 @@ export default function OrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const fetchOrders = async () => {
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/orders");
@@ -34,7 +34,7 @@ export default function OrdersPage() {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
 
-  const handleRemoveOrder = async (orderId: number, isRemove: boolean) => {
+  const handleRemoveOrder = async (orderId: string, isRemove: boolean) => {
     try {
       const response = await fetch(`/api/orders/${orderId}`, {
         method: "DELETE",
@@ -44,7 +44,7 @@ export default function OrdersPage() {
 
       if (data.success) {
         setOrders((prevOrders) =>
-          prevOrders.filter((order) => order.id !== orderId)
+          prevOrders.filter((order) => order._id.toString() !== orderId)
         );
         router.refresh();
       } else {
@@ -56,7 +56,7 @@ export default function OrdersPage() {
     }
   };
 
-  const toggleOrderExpansion = (orderId: number) => {
+  const toggleOrderExpansion = (orderId: string) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
@@ -107,12 +107,14 @@ export default function OrdersPage() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <Fragment key={order.id}>
+              <Fragment key={order._id.toString()}>
                 <tr
-                  onClick={() => toggleOrderExpansion(order.id)}
+                  onClick={() => toggleOrderExpansion(order._id.toString())}
                   className="hover:bg-gray-50 transition-colors border-b cursor-pointer"
                 >
-                  <td className="px-6 py-4 text-gray-800">{order.id}</td>
+                  <td className="px-6 py-4 text-gray-800">
+                    {order._id.toString()}
+                  </td>
                   <td className="px-6 py-4 text-gray-800">{order.name}</td>
                   <td className="px-6 py-4 text-gray-800">{order.phone}</td>
                   <td className="px-6 py-4 text-gray-800">
@@ -138,7 +140,7 @@ export default function OrdersPage() {
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
-                        handleRemoveOrder(order.id, false);
+                        handleRemoveOrder(order._id.toString(), false);
                       }}
                       className="text-red-500 flex items-center space-x-1"
                     >
@@ -147,7 +149,7 @@ export default function OrdersPage() {
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
-                        handleRemoveOrder(order.id, true);
+                        handleRemoveOrder(order._id.toString(), true);
                       }}
                       className="text-yellow-500 flex items-center space-x-1"
                     >
@@ -155,7 +157,9 @@ export default function OrdersPage() {
                     </button>
                   </td>
                 </tr>
-                {expandedOrderId === order.id && <OrderRow order={order} />}
+                {expandedOrderId === order._id.toString() && (
+                  <OrderRow order={order} />
+                )}
               </Fragment>
             ))}
           </tbody>

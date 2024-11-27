@@ -38,10 +38,10 @@ export default function ProductDetailsModal({
     event.stopPropagation();
   }, []);
   const placeInBasket = useCallback(() => {
-    const countInBasket = basket?.[product.id]?.quantity || 0;
+    const countInBasket = basket?.[product._id.toString()]?.quantity || 0;
     saveInBasket({
       ...basket,
-      [product.id]: {
+      [product._id.toString()]: {
         product: {
           ...product,
           price: Number(product.price),
@@ -70,7 +70,7 @@ export default function ProductDetailsModal({
         isOpen &&
           createPortal(
             <div
-              key={product.id}
+              key={product._id.toString()}
               className="fixed inset-0 flex items-center justify-center z-30"
             >
               {/* Background overlay */}
@@ -120,11 +120,13 @@ export default function ProductDetailsModal({
                           ? `In Stock: ${product.quantity}`
                           : "Out of Stock"}
                       </p>
-                      {basket[product.id]?.quantity && (
+                      {basket[product._id.toString()]?.quantity && (
                         <p
                           className={`flex items-center text-sm font-medium text-orange-600`}
                         >
-                          {`In Basket: ${basket[product.id]?.quantity}`}
+                          {`In Basket: ${
+                            basket[product._id.toString()]?.quantity
+                          }`}
                         </p>
                       )}
                     </div>
@@ -149,7 +151,8 @@ export default function ProductDetailsModal({
                         className="bg-gray-300 text-gray-700 rounded-r px-3 py-1"
                         onClick={handleIncrement}
                         disabled={
-                          productsCount + (basket[product.id]?.quantity || 0) >=
+                          productsCount +
+                            (basket[product._id.toString()]?.quantity || 0) >=
                           product.quantity
                         }
                       >
@@ -165,7 +168,8 @@ export default function ProductDetailsModal({
                       }`}
                       disabled={
                         product.quantity === 0 ||
-                        (basket[product.id]?.quantity || 0) >= product.quantity
+                        (basket[product._id.toString()]?.quantity || 0) >=
+                          product.quantity
                       }
                       onClick={placeInBasket}
                     >

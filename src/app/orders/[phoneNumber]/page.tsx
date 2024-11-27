@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Order } from "@/db/entity/Order";
 
@@ -11,7 +11,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function fetchOrders() {
+  const fetchOrders = useCallback(async () => {
     try {
       const response = await fetch(`/api/orders/+${phoneNumber}`);
       if (!response.ok) {
@@ -24,13 +24,13 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [phoneNumber]);
 
   useEffect(() => {
     if (phoneNumber) {
       fetchOrders();
     }
-  });
+  }, [fetchOrders, phoneNumber]);
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
@@ -49,12 +49,12 @@ export default function OrdersPage() {
       <ul className="space-y-6">
         {orders.map((order) => (
           <li
-            key={order.id}
+            key={order._id.toString()}
             className="bg-white shadow-lg rounded-lg p-6 border border-gray-200"
           >
             <div className="mb-4">
               <h2 className="text-xl font-semibold text-gray-700">
-                Order ID: {order.id}
+                Order ID: {order._id.toString()}
               </h2>
               <p className="text-gray-600">
                 <strong>Name:</strong> {order.name}

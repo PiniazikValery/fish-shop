@@ -5,7 +5,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useCallback } from "react";
 
 interface EditProductButtonProps {
-  productId: number;
+  productId: string;
 }
 
 export default function EditProductButton(props: EditProductButtonProps) {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { ObjectId } from "mongodb";
 
 import { OrderSchema } from "@/app/lib/definitions/order-definitions";
 import { InMemoryQueue } from "@/app/api/utils";
@@ -30,13 +31,13 @@ export async function POST(
     const data: CheckoutRequest = OrderSchema.parse(await request.json());
     await queue.enqueue(async () => {
       const db = await getDb();
-      const orderRepository = db.getRepository(Order);
-      const productRepository = db.getRepository(Product);
-      const chatIdRepository = db.getRepository(ChatId);
+      const orderRepository = db.getMongoRepository(Order);
+      const productRepository = db.getMongoRepository(Product);
+      const chatIdRepository = db.getMongoRepository(ChatId);
 
       for (const [productId, { quantity }] of Object.entries(data.basket)) {
-        const product = await productRepository.findOne({
-          where: { id: parseInt(productId) },
+        const product = await productRepository.findOneBy({
+          _id: new ObjectId(productId),
         });
 
         if (!product) {
@@ -51,12 +52,20 @@ export async function POST(
       }
 
       for (const [productId, { quantity }] of Object.entries(data.basket)) {
-        const product = await productRepository.findOne({
-          where: { id: parseInt(productId) },
+        const product = await productRepository.findOneBy({
+          _id: new ObjectId(productId),
         });
         if (product) {
           product.quantity -= quantity;
-          await productRepository.save(product);
+          // await productRepository.save(product);
+          const { _id, ...fieldsToUpdate } = product;
+
+          await productRepository.updateOne(
+            {
+              _id: new ObjectId(_id),
+            },
+            { $set: fieldsToUpdate }
+          );
         }
       }
 
@@ -119,6 +128,7 @@ export async function POST(
         { status: 400 }
       );
     }
+    console.log(error);
     return NextResponse.json(
       {
         success: false,

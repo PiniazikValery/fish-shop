@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ProductSchema = z.object({
-  id: z.number().optional(),
+  _id: z.string().optional(),
   name: z
     .string()
     .min(2, { message: "Name must be at least 2 characters long." })

@@ -15,7 +15,7 @@ export default function OrderRow({ order }: OrderRowProps) {
   const onUpdateClick = useCallback(async () => {
     try {
       setUpdateInProcess(true);
-      await fetch(`/api/orders/${localOrder.id}`, {
+      await fetch(`/api/orders/${localOrder._id.toString()}`, {
         method: "PATCH",
         body: JSON.stringify({ order: localOrder }),
       });
@@ -29,20 +29,22 @@ export default function OrderRow({ order }: OrderRowProps) {
   const onCountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setOrderChanged(true);
-      const productId = Number(e.currentTarget.dataset.productId);
-      setLocalOrder({
-        ...localOrder,
-        basket: {
-          ...localOrder.basket,
-          [productId]: {
-            ...localOrder.basket[productId],
-            quantity: Math.min(
-              +e.target.value || 1,
-              localOrder.basket[productId]!.product.quantity
-            ),
+      const productId = e.currentTarget.dataset.productId;
+      if (productId && localOrder.basket[productId]) {
+        setLocalOrder({
+          ...localOrder,
+          basket: {
+            ...localOrder.basket,
+            [productId]: {
+              ...localOrder.basket[productId],
+              quantity: Math.min(
+                +e.target.value || 1,
+                localOrder.basket[productId]!.product.quantity
+              ),
+            },
           },
-        },
-      });
+        });
+      }
     },
     [localOrder, setLocalOrder, setOrderChanged]
   );
@@ -71,7 +73,7 @@ export default function OrderRow({ order }: OrderRowProps) {
             <tbody>
               {Object.keys(localOrder.basket).map((itemKey) => (
                 <tr
-                  key={localOrder.basket[itemKey]?.product.id}
+                  key={localOrder.basket[itemKey]?.product._id.toString()}
                   className="border-b"
                 >
                   <td className="px-4 py-2 text-gray-800">
@@ -79,7 +81,9 @@ export default function OrderRow({ order }: OrderRowProps) {
                   </td>
                   <td className="px-4 py-2 text-gray-800">
                     <input
-                      data-product-id={localOrder.basket[itemKey]?.product.id}
+                      data-product-id={localOrder.basket[
+                        itemKey
+                      ]?.product._id.toString()}
                       onChange={onCountChange}
                       type="number"
                       value={localOrder.basket[itemKey]?.quantity || ""}

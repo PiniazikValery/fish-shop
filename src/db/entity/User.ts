@@ -1,19 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, ObjectIdColumn, ObjectId } from "typeorm";
 
-@Entity('user')
+@Entity("user")
 export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string
+  @ObjectIdColumn()
+  _id!: ObjectId;
 
-    @Column({ length: 100 })
-    name!: string;
+  @Column({ length: 100 })
+  name!: string;
 
-    @Column({ default: false })
-    isAdmin!: boolean;
+  @Column({ default: false })
+  isAdmin!: boolean;
 
-    @Column({ unique: true })
-    email!: string;
+  @Column({ unique: true })
+  email!: string;
 
-    @Column()
-    password!: string;
+  @Column()
+  password!: string;
 }

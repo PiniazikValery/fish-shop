@@ -1,4 +1,5 @@
 import { revalidatePath } from "next/cache";
+import { ObjectId } from "mongodb";
 
 import { getDb } from "@/db";
 import { Order } from "@/db/entity/Order";
@@ -61,11 +62,11 @@ export async function DELETE(
     const { isRemove = false }: { isRemove: boolean } = await request.json();
     if (isRemove) {
       const db = await getDb();
-      const orderRepository = db.getRepository(Order);
-      const productRepository = db.getRepository(Product);
+      const orderRepository = db.getMongoRepository(Order);
+      const productRepository = db.getMongoRepository(Product);
 
-      const order = await orderRepository.findOne({
-        where: { id: parseInt(id) },
+      const order = await orderRepository.findOneBy({
+        _id: new ObjectId(id),
       });
       if (!order) {
         return new Response("Order not found", {
@@ -77,14 +78,21 @@ export async function DELETE(
         Object.keys(order.basket).map(async (itemKey) => {
           const basketProduct = order.basket[itemKey]?.product;
           if (basketProduct) {
-            const product = await productRepository.findOne({
-              where: { id: +itemKey },
+            const product = await productRepository.findOneBy({
+              _id: new ObjectId(itemKey),
             });
             if (product) {
               product.quantity =
                 Number(product.quantity) +
                 (order.basket[itemKey]?.quantity || 0);
-              await productRepository.save(product);
+              // await productRepository.save(product);
+              const { _id, ...fieldsToUpdate } = product;
+              await productRepository.updateOne(
+                {
+                  _id: new ObjectId(_id),
+                },
+                { $set: fieldsToUpdate }
+              );
               revalidatePath("/products", "page");
             }
           }
@@ -110,19 +118,19 @@ export async function DELETE(
 export async function PATCH(request: Request) {
   try {
     const db = await getDb();
-    const orderRepository = db.getRepository(Order);
-    const productRepository = db.getRepository(Product);
+    const orderRepository = db.getMongoRepository(Order);
+    const productRepository = db.getMongoRepository(Product);
     const { order: newOrder }: { order: Order } = await request.json();
-    const oldOrder = await orderRepository.findOne({
-      where: { id: newOrder.id },
+    const oldOrder = await orderRepository.findOneBy({
+      _id: new ObjectId(newOrder._id),
     });
     await Promise.all(
       Object.keys(newOrder.basket).map(async (itemKey) => {
         const difference =
           (oldOrder?.basket[itemKey]?.quantity || 0) -
           (newOrder?.basket[itemKey]?.quantity || 0);
-        const product = await productRepository.findOne({
-          where: { id: +itemKey },
+        const product = await productRepository.findOneBy({
+          _id: new ObjectId(itemKey),
         });
         if (product) {
           product.quantity = Math.max(Number(product.quantity) + difference, 0);
@@ -131,7 +139,14 @@ export async function PATCH(request: Request) {
         }
       })
     );
-    await orderRepository.save(newOrder);
+    // await orderRepository.save(newOrder);
+    const { _id, ...fieldsToUpdate } = newOrder;
+    await orderRepository.updateOne(
+      {
+        _id: new ObjectId(_id),
+      },
+      { $set: fieldsToUpdate }
+    );
     return Response.json({
       success: true,
       message: "Order updated successfully",

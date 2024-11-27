@@ -2,7 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  ObjectId,
+  ObjectIdColumn,
   UpdateDateColumn,
 } from "typeorm";
 
@@ -10,8 +11,8 @@ import type { Basket } from "@/types/basket";
 
 @Entity("order")
 export class Order {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @ObjectIdColumn()
+  _id!: ObjectId;
 
   @Column({ type: "varchar", length: 100 })
   name!: string;

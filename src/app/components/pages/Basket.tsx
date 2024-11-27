@@ -20,17 +20,19 @@ export default function BasketComponent() {
   );
   const onCountChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const productId = Number(e.currentTarget.dataset.productId);
-      setBasket({
-        ...basket,
-        [productId]: {
-          ...basket[productId],
-          quantity: Math.min(
-            +e.target.value || 1,
-            basket[productId]!.product.quantity
-          ),
-        },
-      });
+      const productId = e.currentTarget.dataset.productId!;
+      if (productId && basket[productId]) {
+        setBasket({
+          ...basket,
+          [productId]: {
+            ...basket[productId],
+            quantity: Math.min(
+              +e.target.value || 1,
+              basket[productId]!.product.quantity
+            ),
+          },
+        });
+      }
     },
     [basket, setBasket]
   );
@@ -70,7 +72,10 @@ export default function BasketComponent() {
               {basketArr.map(
                 (basketItem) =>
                   basketItem && (
-                    <tr key={basketItem.product.id} className="border-b">
+                    <tr
+                      key={basketItem.product._id.toString()}
+                      className="border-b"
+                    >
                       <td className="p-4 w-1/5">
                         {(() => {
                           return basketItem.product.name;
@@ -81,7 +86,7 @@ export default function BasketComponent() {
                       </td>
                       <td className="p-4 w-1/5">
                         <input
-                          data-product-id={basketItem.product.id}
+                          data-product-id={basketItem.product._id.toString()}
                           onChange={onCountChange}
                           type="number"
                           value={basketItem.quantity || ""}
@@ -98,7 +103,7 @@ export default function BasketComponent() {
                       <td className="p-4 w-1/5">
                         <div className="flex justify-end">
                           <button
-                            data-product-id={basketItem.product.id}
+                            data-product-id={basketItem.product._id.toString()}
                             onClick={onRemove}
                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
                           >

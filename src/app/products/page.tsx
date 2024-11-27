@@ -5,11 +5,19 @@ import ProductDetailsModal from "@/app/components/ProductDetailsModal";
 import { ClientOnly } from "@/app/components/ClientOnly";
 import EditProductButton from "@/app/components/EditProductButton";
 import { auth } from "@/auth";
+import SearchProducts from "@/app/components/SearchProducts";
 
-export default async function ProductPage() {
+export default async function ProductPage(props: {
+  searchParams?: Promise<{
+    search?: string;
+  }>;
+}) {
   const session = await auth();
+  const searchParams = await props.searchParams;
+  const search = searchParams?.search || "";
+  // console.log("search: ", search);
   const productsResponse = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + "/products"
+    process.env.NEXT_PUBLIC_API_URL + `/products?search=${search}`
   );
   if (!productsResponse.ok) {
     throw new Error("Failed to fetch posts");
@@ -18,17 +26,18 @@ export default async function ProductPage() {
   return (
     <div className="min-h-screen bg-gray-100 pb-10">
       <div className="container mx-auto">
+        <SearchProducts />
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <li
-              key={product.id}
+              key={+product._id}
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
               <ClientOnly>
                 <ProductDetailsModal product={product}>
                   <div className="relative w-full h-64">
                     {session?.user?.isAdmin && (
-                      <EditProductButton productId={product.id} />
+                      <EditProductButton productId={product._id.toString()} />
                     )}
                     {product.img && (
                       <Image

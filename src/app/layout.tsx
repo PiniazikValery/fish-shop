@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import "./globals.css";
 import Logo from "./components/icons/Logo";
 import Link from "next/link";
@@ -30,11 +31,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased container mx-auto`}
       >
-        <div className="w-full flex justify-center">
+        <div className="w-full flex items-center justify-between">
           <Link href="/products">
             <Logo width={150} height={150} />
+          </Link>
+          <Link href="/basket">
+            <button
+              className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
+              aria-label="Basket"
+            >
+              <ShoppingCartIcon className="h-6 w-6 text-gray-700" />
+            </button>
           </Link>
         </div>
         <MapProvider>{children}</MapProvider>

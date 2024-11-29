@@ -8,9 +8,6 @@ import { User } from "@/db/entity/User";
 import { ZodError } from "zod";
 
 const authConfig: NextAuthConfig = {
-  pages: {
-    signIn: "/auth/login",
-  },
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -61,16 +58,6 @@ const authConfig: NextAuthConfig = {
     session({ session, token }) {
       session.user.isAdmin = token.isAdmin;
       return session;
-    },
-    authorized: async ({ auth, request: { nextUrl } }) => {
-      // Logged in users are authenticated, otherwise redirect to login page
-      const isLoggedIn = !!auth?.user;
-      const isAdmin = auth?.user?.isAdmin;
-      const isAdminRoute = nextUrl.pathname.startsWith("/admin");
-      if (isAdminRoute) {
-        return isLoggedIn && isAdmin;
-      }
-      return true;
     },
   },
 };

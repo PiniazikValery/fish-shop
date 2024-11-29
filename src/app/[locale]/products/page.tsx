@@ -28,7 +28,7 @@ export default async function ProductPage(props: {
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <li
-            key={+product._id}
+            key={product._id.toString()}
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
             <ClientOnly>

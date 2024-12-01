@@ -1,9 +1,11 @@
 "use client";
 import { useFormState } from "react-dom";
+import { useTranslations } from "next-intl";
 
 import { signupUser } from "@/app/lib/actions/auth";
 
 export default function RegisterForm() {
+  const t = useTranslations("Register");
   const [errorMessage, registerUser] = useFormState(signupUser, undefined);
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -21,12 +23,12 @@ export default function RegisterForm() {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Name
+            {t("name")}
           </label>
           <input
             id="name"
             name="name"
-            placeholder="Name"
+            placeholder={t("name")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -35,12 +37,12 @@ export default function RegisterForm() {
             htmlFor="email"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
             name="email"
-            placeholder="Email"
+            placeholder={t("email")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -49,13 +51,13 @@ export default function RegisterForm() {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Password
+            {t("password")}
           </label>
           <input
             id="password"
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder={t("password")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -63,7 +65,7 @@ export default function RegisterForm() {
           type="submit"
           className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Sign Up
+          {t("signUp")}
         </button>
       </form>
     </div>

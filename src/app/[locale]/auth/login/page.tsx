@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useFormState } from "react-dom";
+import { useTranslations } from "next-intl";
 
 import { signinUser } from "@/app/lib/actions/auth";
 
 export default function LoginPage() {
+  const t = useTranslations("Login");
   const [errorMessage, loginUser] = useFormState(signinUser, undefined);
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -22,7 +24,7 @@ export default function LoginPage() {
             htmlFor="email"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
@@ -37,7 +39,7 @@ export default function LoginPage() {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Password
+            {t("password")}
           </label>
           <input
             id="password"
@@ -60,7 +62,7 @@ export default function LoginPage() {
               className="ml-2 block text-sm text-gray-900"
             >
               {" "}
-              Remember me{" "}
+              {t("rememberMe")}{" "}
             </label>
           </div>
           <div>
@@ -68,7 +70,7 @@ export default function LoginPage() {
               href="/auth/register"
               className="text-sm text-blue-500 hover:underline"
             >
-              Don&apos;t have account?
+              {t("noAccountYet")}
             </Link>
           </div>
         </div>
@@ -76,7 +78,7 @@ export default function LoginPage() {
           type="submit"
           className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Sign In
+          {t("signIn")}
         </button>
       </form>
     </div>

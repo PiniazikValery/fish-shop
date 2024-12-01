@@ -57,7 +57,6 @@ export async function POST(
         });
         if (product) {
           product.quantity -= quantity;
-          // await productRepository.save(product);
           const { _id, ...fieldsToUpdate } = product;
 
           await productRepository.updateOne(

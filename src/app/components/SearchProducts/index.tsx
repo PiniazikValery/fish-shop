@@ -1,9 +1,11 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function SearchProducts() {
+  const t = useTranslations("Products");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -25,7 +27,7 @@ export default function SearchProducts() {
       </label>
       <input
         className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-        placeholder="Search for products..."
+        placeholder={`${t("searchPlaceholder")}...`}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}

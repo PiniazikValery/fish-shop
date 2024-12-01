@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 
 import { Product } from "@/db/entity/Product";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ export default function ProductDetailsModal({
   children: React.ReactNode;
   product: Product;
 }) {
+  const t = useTranslations("Products");
   const [basket, saveInBasket] = useLocalStorage<Basket>("basket", {});
   const router = useRouter();
   const [finalModalIsOpen, setFinalModalIsOpen] = useState(false);
@@ -117,14 +119,14 @@ export default function ProductDetailsModal({
                         }`}
                       >
                         {product.quantity > 0
-                          ? `In Stock: ${product.quantity}`
-                          : "Out of Stock"}
+                          ? `${t("inStock")}: ${product.quantity}`
+                          : t("outOfStock")}
                       </p>
                       {basket[product._id.toString()]?.quantity && (
                         <p
                           className={`flex items-center text-sm font-medium text-orange-600`}
                         >
-                          {`In Basket: ${
+                          {`${t("inBasket")}: ${
                             basket[product._id.toString()]?.quantity
                           }`}
                         </p>
@@ -173,7 +175,7 @@ export default function ProductDetailsModal({
                       }
                       onClick={placeInBasket}
                     >
-                      Place in Basket
+                      {t("placeInBasket")}
                     </button>
                   </div>
                 </div>
@@ -186,7 +188,7 @@ export default function ProductDetailsModal({
                   />
                   <div className="bg-white rounded-lg p-6 max-w-5xl relative max-h-[90vh] overflow-y-scroll">
                     <h2 className="text-xl font-semibold mb-4 text-center">
-                      Added to basket
+                      {t("addedToBasket")}
                     </h2>
 
                     <div className="flex justify-center space-x-4">
@@ -194,13 +196,13 @@ export default function ProductDetailsModal({
                         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
                         onClick={closeModal}
                       >
-                        Continue shopping
+                        {t("continueShopping")}
                       </button>
                       <button
                         className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
                         onClick={() => router.push("/basket")}
                       >
-                        View basket
+                        {t("viewBasket")}
                       </button>
                     </div>
                   </div>

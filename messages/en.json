@@ -1,6 +1,87 @@
 {
+  "Common": {
+    "loading": "Loading",
+    "error": "Error"
+  },
   "HomePage": {
     "title": "Hello world!",
     "about": "Go to the about page"
+  },
+  "AddProduct": {
+    "title": "Create Product",
+    "name": "Product name",
+    "description": "Product description",
+    "price": "Price",
+    "imageUrl": "Image URL",
+    "quantity": "Quantity",
+    "buttonTitle": "Create Product"
+  },
+  "EditProduct": {
+    "title": "Update Product",
+    "name": "Product name",
+    "description": "Product description",
+    "price": "Price",
+    "imageUrl": "Image URL",
+    "quantity": "Quantity",
+    "buttonTitle": "Update Product"
+  },
+  "Orders": {
+    "noOrdersForPhone": "No orders found for this phone number.",
+    "specificPhoneTitle": "Orders for Phone Number",
+    "title": "Orders",
+    "noOrders": "There are no orders at the moment.",
+    "noOrdersDescription": "Once orders are placed, they'll appear here.",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "actions": "Actions",
+    "viewOnMap": "View on map",
+    "orderID": "Order ID"
+  },
+  "Login": {
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "noAccountYet": "Don't have account?",
+    "signIn": "Sign In"
+  },
+  "Register": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "signup": "Sign Up"
+  },
+  "Products": {
+    "searchPlaceholder": "Search for products",
+    "placeInBasket": "Place in Basket",
+    "inStock": "In Stock",
+    "inBasket": "In Basket",
+    "outOfStock": "Out of Stock",
+    "addedToBasket": "Added to basket",
+    "continueShopping": "Continue shopping",
+    "viewBasket": "View basket"
+  },
+  "Basket": {
+    "yourBasket": "Your Basket",
+    "emptyBasket": "Your basket is empty.",
+    "continueShopping": "Continue Shopping",
+    "product": "Product",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "remove": "Remove",
+    "clearBasket": "Clear Basket",
+    "goToCheckout": "Proceed to Checkout"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "name": "Name",
+    "phone": "Phone",
+    "courierDetails": "Details for Courier",
+    "courierDetailsPlaceholder": "Additional details for the courier (e.g., building, floor, specific instructions)",
+    "address": "Address",
+    "submit": "Submit"
   }
 }

@@ -3,10 +3,12 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Decimal from "decimal.js";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Product } from "@/db/entity/Product";
 
 export default function EditProductPage() {
+  const t = useTranslations("EditProduct");
   const router = useRouter();
   const params = useParams();
   const productId = params.productId;
@@ -55,10 +57,10 @@ export default function EditProductPage() {
             : "bg-white"
         }`}
       >
-        <h1 className="text-2xl font-bold text-center mb-6">Create Product</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">{t("title")}</h1>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Name:</label>
+            <label className="block text-gray-700">{t("name")}:</label>
             <input
               value={editProduct?.name || ""}
               onChange={(e) =>
@@ -72,7 +74,7 @@ export default function EditProductPage() {
             />
           </div>
           <div>
-            <label className="block text-gray-700">Description:</label>
+            <label className="block text-gray-700">{t("description")}:</label>
             <textarea
               value={editProduct?.description || ""}
               onChange={(e) =>
@@ -86,7 +88,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700">Price:</label>
+            <label className="block text-gray-700">{t("price")}:</label>
             <input
               value={editProduct?.price || ""}
               onChange={(e) =>
@@ -101,7 +103,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700">Image URL:</label>
+            <label className="block text-gray-700">{t("imageUrl")}:</label>
             <input
               value={editProduct?.img || ""}
               onChange={(e) =>
@@ -115,7 +117,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700">Quantity:</label>
+            <label className="block text-gray-700">{t("quantity")}:</label>
             <input
               value={editProduct?.quantity || ""}
               onChange={(e) =>
@@ -133,7 +135,7 @@ export default function EditProductPage() {
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
           >
-            Update Product
+            {t("buttonTitle")}
           </button>
         </form>
       </div>

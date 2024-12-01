@@ -3,6 +3,7 @@
 import { useEffect, useState, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { TrashIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { useTranslations } from "next-intl";
 
 import { Order } from "@/db/entity/Order";
 import OrderRow from "@/app/components/OrderRow";
@@ -12,6 +13,8 @@ const getYandexMapsLink = (latitude: number, longitude: number) => {
 };
 
 export default function OrdersPage() {
+  const tOrders = useTranslations("Orders");
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +34,7 @@ export default function OrdersPage() {
     fetchOrders();
   }, []);
   if (loading) {
-    return <p className="text-center text-gray-500">Loading...</p>;
+    return <p className="text-center text-gray-500">{tCommon("loading")}...</p>;
   }
 
   const handleRemoveOrder = async (orderId: string, isRemove: boolean) => {
@@ -63,12 +66,8 @@ export default function OrdersPage() {
   if (orders.length === 0) {
     return (
       <div className="text-center mt-8">
-        <p className="text-gray-600 text-lg">
-          There are no orders at the moment.
-        </p>
-        <p className="text-gray-500">
-          Once orders are placed, they&apos;ll appear here.
-        </p>
+        <p className="text-gray-600 text-lg">{tOrders("noOrders")}</p>
+        <p className="text-gray-500">{tOrders("noOrdersDescription")}</p>
       </div>
     );
   }
@@ -76,7 +75,7 @@ export default function OrdersPage() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Orders
+        {tOrders("title")}
       </h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -86,22 +85,22 @@ export default function OrdersPage() {
                 ID
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Name
+                {tOrders("name")}
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Phone
+                {tOrders("phone")}
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Address
+                {tOrders("address")}
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Created At
+                {tOrders("createdAt")}
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Updated At
+                {tOrders("updatedAt")}
               </th>
               <th className="px-6 py-4 text-left text-gray-600 font-semibold">
-                Actions
+                {tOrders("actions")}
               </th>
             </tr>
           </thead>
@@ -127,7 +126,7 @@ export default function OrdersPage() {
                       rel="noopener noreferrer"
                       className="text-blue-500 underline"
                     >
-                      View on map
+                      {tOrders("viewOnMap")}
                     </a>
                   </td>
                   <td className="px-6 py-4 text-gray-600">

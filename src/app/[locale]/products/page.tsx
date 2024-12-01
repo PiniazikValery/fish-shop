@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
 import { Product } from "@/db/entity/Product";
 import ProductDetailsModal from "@/app/components/ProductDetailsModal";
@@ -12,6 +13,7 @@ export default async function ProductPage(props: {
     search?: string;
   }>;
 }) {
+  const t = await getTranslations("Products");
   const session = await auth();
   const searchParams = await props.searchParams;
   const search = searchParams?.search || "";
@@ -62,8 +64,8 @@ export default async function ProductPage(props: {
                     }`}
                   >
                     {product.quantity > 0
-                      ? `In Stock: ${product.quantity}`
-                      : "Out of Stock"}
+                      ? `${t("inStock")}: ${product.quantity}`
+                      : t("outOfStock")}
                   </p>
                 </div>
               </ProductDetailsModal>

@@ -9,17 +9,21 @@ export async function GET(req: Request) {
   const db = await getDb();
   const productRepository = db.getMongoRepository(Product);
 
-  let products;
+  let products: Product[] = [];
 
-  if (searchQuery) {
-    products = await productRepository.find({
-      where: { name: { $regex: `.*${searchQuery}.*`, $options: "i" } },
-      order: { name: 1 },
-    });
-  } else {
-    products = await productRepository.find({
-      order: { name: 1 },
-    });
+  try {
+    if (searchQuery) {
+      products = await productRepository.find({
+        where: { name: { $regex: `.*${searchQuery}.*`, $options: "i" } },
+        order: { name: 1 },
+      });
+    } else {
+      products = await productRepository.find({
+        order: { name: 1 },
+      });
+    }
+  } catch (err) {
+    console.error(err);
   }
 
   return Response.json({ products });

@@ -40,6 +40,7 @@ export default function AddProductPage() {
             <label className="block text-gray-700">{t("price")}:</label>
             <input
               type="number"
+              step="0.01"
               name="price"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

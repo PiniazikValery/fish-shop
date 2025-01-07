@@ -119,7 +119,7 @@ export default function EditProductPage() {
           <div>
             <label className="block text-gray-700">{t("quantity")}:</label>
             <input
-              value={editProduct?.quantity || ""}
+              value={editProduct?.quantity}
               onChange={(e) =>
                 setEditProduct({ ...editProduct!, quantity: +e.target.value })
               }

@@ -110,7 +110,7 @@ export default function OrdersPage() {
                         {basketItem.product.description}
                       </p>
                       <p className="text-gray-500">
-                        <strong>{tBasket("price")}:</strong> $
+                        <strong>{tBasket("price")}:</strong> BYN{" "}
                         {basketItem.product.price.toFixed(2)}
                       </p>
                       <p className="text-gray-500">
@@ -118,7 +118,7 @@ export default function OrdersPage() {
                         {basketItem.quantity}
                       </p>
                       <p className="text-gray-700 font-semibold">
-                        <strong>{tBasket("total")}:</strong> $
+                        <strong>{tBasket("total")}:</strong> BYN{" "}
                         {(
                           basketItem.product.price * basketItem.quantity
                         ).toFixed(2)}

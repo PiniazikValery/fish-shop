@@ -2,14 +2,21 @@ import "reflect-metadata";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { routing } from "@/i18n/routing";
+import { auth } from "@/auth";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import {
+  ShoppingCartIcon,
+  UserCircleIcon,
+  PlusCircleIcon,
+  ListBulletIcon,
+} from "@heroicons/react/24/outline";
 import "./globals.css";
 import Logo from "../components/icons/Logo";
 import Link from "next/link";
 import { MapProvider } from "../providers/map-provider";
+import SignoutButton from "../components/SignoutButton";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -35,6 +42,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
+  const session = await auth();
   if (!routing.locales.includes(locale as "en" | "ru")) {
     notFound();
   }
@@ -51,14 +59,48 @@ export default async function RootLayout({
             <Link href="/products">
               <Logo width={150} height={150} />
             </Link>
-            <Link href="/basket">
-              <button
-                className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
-                aria-label="Basket"
-              >
-                <ShoppingCartIcon className="h-6 w-6 text-gray-700" />
-              </button>
-            </Link>
+            <div className="flex">
+              {session?.user?.isAdmin && (
+                <div className="flex">
+                  <Link href="/admin/orders">
+                    <button
+                      className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
+                      aria-label="Basket"
+                    >
+                      <ListBulletIcon className="h-6 w-6 text-gray-700" />
+                    </button>
+                  </Link>
+                  <Link href="/admin/add-product">
+                    <button
+                      className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
+                      aria-label="Basket"
+                    >
+                      <PlusCircleIcon className="h-6 w-6 text-gray-700" />
+                    </button>
+                  </Link>
+                </div>
+              )}
+              <Link href="/basket">
+                <button
+                  className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
+                  aria-label="Basket"
+                >
+                  <ShoppingCartIcon className="h-6 w-6 text-gray-700" />
+                </button>
+              </Link>
+              {session?.user ? (
+                <SignoutButton />
+              ) : (
+                <Link href="/auth/login">
+                  <button
+                    className="flex items-center p-2 rounded-full hover:bg-gray-200 transition justify-center w-16 h-16"
+                    aria-label="Basket"
+                  >
+                    <UserCircleIcon className="h-6 w-6 text-gray-700" />
+                  </button>
+                </Link>
+              )}
+            </div>
           </div>
           <MapProvider>{children}</MapProvider>
         </NextIntlClientProvider>

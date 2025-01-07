@@ -77,28 +77,28 @@ export async function POST(
       });
 
       await orderRepository.save(order);
-      const orderDetailsMessage = `🛒 *Order Created Successfully!*
+      const orderDetailsMessage = `🛒 *Заказ успешно создан!*
 
-      Hello, a new order has been created
+      Здравствуйте, создан новый заказ
 
-      *Order Details:*
-      \- **Name:** ${order.name}
-      \- **Phone:** ${order.phone}
-      \- **Address:** [View on Yandex Maps](${getYandexMapsLink(
+      *Детали заказа:*
+      \- **Имя:** ${order.name}
+      \- **Телефон:** ${order.phone}
+      \- **Адрес:** [Посмотреть на Яндекс Картах](${getYandexMapsLink(
         order.address[1],
         order.address[0]
       )})
-      \- **Courier Instructions:** ${order.courierDetails || "None"}
+      \- **Инструкции для курьера:** ${order.courierDetails || "Нет"}
 
-      *Products:*
+      *Продукты:*
       ${Object.entries(data.basket)
         .map(
           ([, { quantity, product }]) =>
-            `\- ${quantity} x ${product.name || "Unknown Product"}`
+            `\- ${quantity} x ${product.name || "Неизвестный продукт"}`
         )
         .join("\n")}
 
-      Thank you for choosing our service! 🚀`;
+      Спасибо, что выбрали наш сервис! 🚀`;
       for (const chat of await chatIdRepository.find()) {
         try {
           await bot.api.sendMessage(chat.chatId, orderDetailsMessage, {
